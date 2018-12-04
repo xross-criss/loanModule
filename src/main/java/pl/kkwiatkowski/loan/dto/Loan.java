@@ -1,5 +1,6 @@
 package pl.kkwiatkowski.loan.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "Loan")
+@Builder
 public class Loan {
 
     @Id
@@ -22,6 +24,8 @@ public class Loan {
 
     @Column(name = "loan_amount")
     private BigDecimal loanAmount;
+    @Column(name = "loan_repayment_amount")
+    private BigDecimal repaymentAmount;
     @Column(name = "loan_term")
     private DateTime loanTerm;
     @Column(name = "loan_issued_date")

@@ -2,37 +2,44 @@ package pl.kkwiatkowski.loan.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kkwiatkowski.loan.constants.Constants;
+import pl.kkwiatkowski.loan.dto.ApplyLoanRequest;
 import pl.kkwiatkowski.loan.dto.Loan;
-import pl.kkwiatkowski.loan.dto.LoanRequest;
-import pl.kkwiatkowski.loan.dto.LoanResponse;
 import pl.kkwiatkowski.loan.exceptions.*;
-
-import java.util.UUID;
+import pl.kkwiatkowski.loan.repository.LoanRepository;
 
 @Slf4j
 @Service
-public class LoanServiceImpl {
+public class LoanService {
 
-    public LoanResponse applyForLoan(LoanRequest request) {
+    private final LoanRepository loanRepository;
+
+    @Autowired
+    public LoanService(LoanRepository loanRepository) {
+        this.loanRepository = loanRepository;
+    }
+
+    public Loan applyForLoan(ApplyLoanRequest request) {
         DateTime requestDate = DateTime.now();
 
         checkLoanTerms(request, requestDate);
         return processLoan(request, requestDate);
     }
 
-    private LoanResponse processLoan(LoanRequest request, DateTime requestDate) {
-        return LoanResponse.builder()
-                .loanId(UUID.randomUUID().toString()) // to oczywiscie powinno byc spiete z baza
-                .loanIssuedDate(requestDate)
-                .loanAmount(request.getIssuedAmount())
-                .loanTerm(requestDate.plus(request.getIssuedDuration()))
-                .repaymentAmount(request.getIssuedAmount().multiply(Constants.INTEREST_PERCENTAGE))
-                .build();
+    private Loan processLoan(ApplyLoanRequest request, DateTime requestDate) {
+        return loanRepository.save(
+                Loan.builder()
+                        .loanIssuedDate(requestDate)
+                        .loanAmount(request.getIssuedAmount())
+                        .loanTerm(requestDate.plus(request.getIssuedDuration()))
+                        .repaymentAmount(request.getIssuedAmount().multiply(Constants.INTEREST_PERCENTAGE))
+                        .build()
+        );
     }
 
-    private void checkLoanTerms(LoanRequest request, DateTime requestDate) {
+    private void checkLoanTerms(ApplyLoanRequest request, DateTime requestDate) {
         DateTime startPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_START_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_START_PERIOD_MINUTES.getMinutes(), 0, 0);
         DateTime endPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_END_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_END_PERIOD_MINUTES.getMinutes(), 0, 0);
 
@@ -54,24 +61,18 @@ public class LoanServiceImpl {
 
     }
 
-    public LoanResponse extendLoan(Loan request) {
+    public Loan extendLoan(String loanId) {
         DateTime requestDate = DateTime.now();
+        Loan loan = loanRepository.findOne(loanId);
 
-        if (request.getLoanId() == null) {
-            throw new LoanDoesntExistsException();
-        }
-
-        return extendLoanResponse(request, requestDate);
+        return extendLoanResponse(loan, requestDate);
     }
 
-    private LoanResponse extendLoanResponse(Loan request, DateTime requestDate) {
-        return LoanResponse.builder()
-                .loanId(request.getLoanId())
-                .repaymentAmount(request.getLoanAmount())
-                .loanTerm(request.getLoanTerm())
-                .loanAmount(request.getLoanAmount())
-                .loanIssuedDate(request.getLoanIssuedDate())
+    private Loan extendLoanResponse(Loan request, DateTime requestDate) {
+
+        return loanRepository.save(Loan.builder()
+                .loanTerm(request.getLoanTerm().plus(Constants.DURATION_OF_EXTENSION))
                 .lastExtendDate(requestDate)
-                .build();
+                .build());
     }
 }

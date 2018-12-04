@@ -2,25 +2,24 @@ package pl.kkwiatkowski.loan.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.kkwiatkowski.loan.dto.ApplyLoanRequest;
 import pl.kkwiatkowski.loan.dto.Loan;
-import pl.kkwiatkowski.loan.dto.LoanRequest;
-import pl.kkwiatkowski.loan.dto.LoanResponse;
-import pl.kkwiatkowski.loan.impl.LoanServiceImpl;
+import pl.kkwiatkowski.loan.impl.LoanService;
 
 @RestController
 @RequestMapping("/api/loan")
 public class LoanController {
 
     @Autowired
-    private LoanServiceImpl loanService;
+    private LoanService loanService;
 
     @RequestMapping(value = "/apply_for_loan", method = RequestMethod.POST)
-    public LoanResponse appyForLoan(@RequestBody LoanRequest request) {
+    public Loan applyForLoan(@RequestBody ApplyLoanRequest request) {
         return loanService.applyForLoan(request);
     }
 
-    @RequestMapping(value = "/extend_loan", method = RequestMethod.POST)
-    public LoanResponse extendLoan(@RequestBody Loan request) {
-        return loanService.extendLoan(request);
+    @RequestMapping(value = "/extend_loan/{loanId}", method = RequestMethod.POST)
+    public Loan extendLoan(@PathVariable("loanId") String loanId) {
+        return loanService.extendLoan(loanId);
     }
 }

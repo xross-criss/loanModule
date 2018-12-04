@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LoanRequest {
+public class ApplyLoanRequest {
     private BigDecimal issuedAmount;
     private Duration issuedDuration;
 }

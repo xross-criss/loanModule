@@ -18,7 +18,7 @@ import pl.kkwiatkowski.loan.Application;
 import pl.kkwiatkowski.loan.common.Util;
 import pl.kkwiatkowski.loan.constants.Constants;
 import pl.kkwiatkowski.loan.dto.Loan;
-import pl.kkwiatkowski.loan.dto.LoanRequest;
+import pl.kkwiatkowski.loan.dto.ApplyLoanRequest;
 import pl.kkwiatkowski.loan.dto.LoanResponse;
 
 import java.math.BigDecimal;
@@ -41,7 +41,7 @@ public class LoanRestApiTest {
 
     @Test
     public void applyForLoanSuccessfully() throws Exception {
-        LoanRequest request = new LoanRequest();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(12000);
         Duration askedDuration = Duration.standardDays(120);
         DateTime askedDate = DateTime.now().plus(askedDuration);
@@ -66,7 +66,7 @@ public class LoanRestApiTest {
 
     @Test
     public void applyForLoanFailedWithAmountTooSmall() throws Exception {
-        LoanRequest request = new LoanRequest();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(120);
         Duration askedDuration = Duration.standardDays(120);
 
@@ -81,7 +81,7 @@ public class LoanRestApiTest {
 
     @Test
     public void applyForLoanFailedWithTermTooShort() throws Exception {
-        LoanRequest request = new LoanRequest();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(12000);
         Duration askedDuration = Duration.standardDays(12);
 
@@ -96,7 +96,7 @@ public class LoanRestApiTest {
 
     @Test
     public void applyForLoanFailedWithAmountTooBig() throws Exception {
-        LoanRequest request = new LoanRequest();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(120000);
         Duration askedDuration = Duration.standardDays(120);
 
@@ -111,7 +111,7 @@ public class LoanRestApiTest {
 
     @Test
     public void applyForLoanFailedWithTermTooLong() throws Exception {
-        LoanRequest request = new LoanRequest();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(12000);
         Duration askedDuration = Duration.standardDays(120000);
 
