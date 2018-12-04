@@ -1,35 +1,32 @@
 package pl.kkwiatkowski.loan.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.joda.time.DateTime;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Loan")
-@Builder
 public class Loan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private String loanId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer loanId;
 
     @Column(name = "loan_amount")
     private BigDecimal loanAmount;
     @Column(name = "loan_repayment_amount")
     private BigDecimal repaymentAmount;
     @Column(name = "loan_term")
-    private DateTime loanTerm;
+    private LocalDateTime loanTerm;
     @Column(name = "loan_issued_date")
-    private DateTime loanIssuedDate;
+    private LocalDateTime loanIssuedDate;
     @Column(name = "last_extend_date")
-    private DateTime lastExtendDate;
+    private LocalDateTime lastExtendDate;
 }

@@ -19,7 +19,7 @@ public class LoanController {
     }
 
     @RequestMapping(value = "/extend_loan/{loanId}", method = RequestMethod.POST)
-    public Loan extendLoan(@PathVariable("loanId") String loanId) {
+    public Loan extendLoan(@PathVariable("loanId") Integer loanId) {
         return loanService.extendLoan(loanId);
     }
 }

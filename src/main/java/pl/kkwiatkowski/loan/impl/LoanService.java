@@ -1,7 +1,6 @@
 package pl.kkwiatkowski.loan.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kkwiatkowski.loan.constants.Constants;
@@ -9,6 +8,13 @@ import pl.kkwiatkowski.loan.dto.ApplyLoanRequest;
 import pl.kkwiatkowski.loan.dto.Loan;
 import pl.kkwiatkowski.loan.exceptions.*;
 import pl.kkwiatkowski.loan.repository.LoanRepository;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Optional;
+
+import static pl.kkwiatkowski.loan.constants.Constants.SYSTEM_OFF_PERIOD_END;
+import static pl.kkwiatkowski.loan.constants.Constants.SYSTEM_OFF_PERIOD_START;
 
 @Slf4j
 @Service
@@ -22,13 +28,13 @@ public class LoanService {
     }
 
     public Loan applyForLoan(ApplyLoanRequest request) {
-        DateTime requestDate = DateTime.now();
+        LocalDateTime requestDate = LocalDateTime.now();
 
-        checkLoanTerms(request, requestDate);
+        checkLoanTerms(request, requestDate.toLocalTime());
         return processLoan(request, requestDate);
     }
 
-    private Loan processLoan(ApplyLoanRequest request, DateTime requestDate) {
+    private Loan processLoan(ApplyLoanRequest request, LocalDateTime requestDate) {
         return loanRepository.save(
                 Loan.builder()
                         .loanIssuedDate(requestDate)
@@ -39,11 +45,8 @@ public class LoanService {
         );
     }
 
-    private void checkLoanTerms(ApplyLoanRequest request, DateTime requestDate) {
-        DateTime startPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_START_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_START_PERIOD_MINUTES.getMinutes(), 0, 0);
-        DateTime endPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_END_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_END_PERIOD_MINUTES.getMinutes(), 0, 0);
-
-        if (startPeriod.isAfter(requestDate) && endPeriod.isBefore(requestDate) && request.getIssuedAmount().equals(Constants.MAX_AMOUNT)) {
+    private void checkLoanTerms(ApplyLoanRequest request, LocalTime requestTime) {
+        if (SYSTEM_OFF_PERIOD_START.isAfter(requestTime) && SYSTEM_OFF_PERIOD_END.isBefore(requestTime) && request.getIssuedAmount().equals(Constants.MAX_AMOUNT)) {
             throw new LoanCannotBeIssuedException();
         }
         if (request.getIssuedAmount().compareTo(Constants.MIN_AMOUNT) < 0) {
@@ -52,23 +55,25 @@ public class LoanService {
         if (request.getIssuedAmount().compareTo(Constants.MAX_AMOUNT) > 0) {
             throw new AmountTooBigException();
         }
-        if (request.getIssuedDuration().getStandardDays() < Constants.MIN_LOAN_DURATION.getStandardDays()) {
+        if (request.getIssuedDuration().toDays() < Constants.MIN_LOAN_DURATION.toDays()) {
             throw new LoanDurationTooShortException();
         }
-        if (request.getIssuedDuration().getStandardDays() > Constants.MAX_LOAN_DURATION.getStandardDays()) {
+        if (request.getIssuedDuration().toDays() > Constants.MAX_LOAN_DURATION.toDays()) {
             throw new LoanDurationTooLongException();
         }
 
     }
 
-    public Loan extendLoan(String loanId) {
-        DateTime requestDate = DateTime.now();
-        Loan loan = loanRepository.findOne(loanId);
-
-        return extendLoanResponse(loan, requestDate);
+    public Loan extendLoan(Integer loanId) {
+        LocalDateTime requestDate = LocalDateTime.now();
+        Optional<Loan> loan = loanRepository.findById(loanId);
+        if (!loan.isPresent()) {
+            throw new LoanDoesntExistsException();
+        }
+        return extendLoanResponse(loan.get(), requestDate);
     }
 
-    private Loan extendLoanResponse(Loan request, DateTime requestDate) {
+    private Loan extendLoanResponse(Loan request, LocalDateTime requestDate) {
 
         return loanRepository.save(Loan.builder()
                 .loanTerm(request.getLoanTerm().plus(Constants.DURATION_OF_EXTENSION))
