@@ -5,9 +5,12 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.springframework.stereotype.Service;
 import pl.kkwiatkowski.loan.constants.Constants;
+import pl.kkwiatkowski.loan.dto.Loan;
 import pl.kkwiatkowski.loan.dto.LoanRequest;
 import pl.kkwiatkowski.loan.dto.LoanResponse;
 import pl.kkwiatkowski.loan.exceptions.*;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -21,9 +24,9 @@ public class LoanServiceImpl {
     }
 
     private LoanResponse processLoan(LoanRequest request, DateTime requestDate) {
-
         return LoanResponse.builder()
-                .loanActionDate(requestDate)
+                .loanId(UUID.randomUUID().toString()) // to oczywiscie powinno byc spiete z baza
+                .loanIssuedDate(requestDate)
                 .loanAmount(request.getIssuedAmount())
                 .loanTerm(requestDate.plus(request.getIssuedDuration()))
                 .repaymentAmount(request.getIssuedAmount().multiply(Constants.interestPercentage))
@@ -50,5 +53,26 @@ public class LoanServiceImpl {
             throw new LoanDurationTooLongException();
         }
 
+    }
+
+    public LoanResponse extendLoan(Loan request) {
+        DateTime requestDate = DateTime.now();
+
+        if (request.getLoanId() == null) {
+            throw new LoanDoesntExistsException();
+        }
+
+        return extendLoanResponse(request, requestDate);
+    }
+
+    private LoanResponse extendLoanResponse(Loan request, DateTime requestDate) {
+        return LoanResponse.builder()
+                .loanId(request.getLoanId())
+                .repaymentAmount(request.getLoanAmount())
+                .loanTerm(request.getLoanTerm())
+                .loanAmount(request.getLoanAmount())
+                .loanIssuedDate(request.getLoanIssuedDate())
+                .lastExtendDate(requestDate)
+                .build();
     }
 }
