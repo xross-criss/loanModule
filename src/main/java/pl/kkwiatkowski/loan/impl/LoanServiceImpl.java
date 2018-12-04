@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.kkwiatkowski.loan.constants.Constants;
 import pl.kkwiatkowski.loan.dto.LoanRequest;
 import pl.kkwiatkowski.loan.dto.LoanResponse;
+import pl.kkwiatkowski.loan.exceptions.*;
 
 @Slf4j
 @Service
@@ -36,10 +37,10 @@ public class LoanServiceImpl {
         if (startPeriod.isAfter(requestDate) && endPeriod.isBefore(requestDate) && request.getIssuedAmount().equals(Constants.maxAmount)) {
             throw new LoanCannotBeIssuedException();
         }
-        if (request.getIssuedAmount().compareTo(Constants.minAmount) == -1) {
+        if (request.getIssuedAmount().compareTo(Constants.minAmount) < 0) {
             throw new AmountTooLowException();
         }
-        if (request.getIssuedAmount().compareTo(Constants.maxAmount) == 1) {
+        if (request.getIssuedAmount().compareTo(Constants.maxAmount) > 0) {
             throw new AmountTooBigException();
         }
         if (request.getIssuedDuration().getStandardDays() < Constants.minLoanDuration.getStandardDays()) {
