@@ -9,7 +9,7 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Settler</name>
+    <name>loanModule</name>
 
     <parent>
         <groupId>io.spring.platform</groupId>
