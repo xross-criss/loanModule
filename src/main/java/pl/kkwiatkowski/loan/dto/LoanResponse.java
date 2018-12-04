@@ -6,6 +6,8 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 
 @Builder
+@Getter
+@Setter
 public class LoanResponse {
     private String loanId;
     private BigDecimal loanAmount;

@@ -61,7 +61,7 @@ public class LoanRestApiTest {
         assertNotNull(response);
         assertEquals(askedDate, response.getLoanTerm());
         assertEquals(askedAmount, response.getLoanAmount());
-        assertEquals(askedAmount.multiply(Constants.interestPercentage), response.getRepaymentAmount());
+        assertEquals(askedAmount.multiply(Constants.INTEREST_PERCENTAGE), response.getRepaymentAmount());
     }
 
     @Test
@@ -145,8 +145,8 @@ public class LoanRestApiTest {
         });
 
         assertNotNull(response);
-        assertEquals(DateTime.now().plus(askedDuration).plus(Constants.durationOfExtension), response.getLoanTerm());
-        assertEquals(DateTime.now().minus(askedDuration, response.getLoanIssuedDate()));
+        assertEquals(DateTime.now().plus(askedDuration).plus(Constants.DURATION_OF_EXTENSION), response.getLoanTerm());
+        assertEquals(DateTime.now().minus(askedDuration), response.getLoanIssuedDate());
         assertNotNull(response.getLastExtendDate());
     }
 

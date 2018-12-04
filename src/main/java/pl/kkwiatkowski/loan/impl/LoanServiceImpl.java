@@ -2,7 +2,6 @@ package pl.kkwiatkowski.loan.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.springframework.stereotype.Service;
 import pl.kkwiatkowski.loan.constants.Constants;
 import pl.kkwiatkowski.loan.dto.Loan;
@@ -29,27 +28,27 @@ public class LoanServiceImpl {
                 .loanIssuedDate(requestDate)
                 .loanAmount(request.getIssuedAmount())
                 .loanTerm(requestDate.plus(request.getIssuedDuration()))
-                .repaymentAmount(request.getIssuedAmount().multiply(Constants.interestPercentage))
+                .repaymentAmount(request.getIssuedAmount().multiply(Constants.INTEREST_PERCENTAGE))
                 .build();
     }
 
     private void checkLoanTerms(LoanRequest request, DateTime requestDate) {
-        DateTime startPeriod = DateTime.now().withTime(Constants.systemOffStartPeriodHours.getHours(), Constants.systemOffStartPeriodMinutes.getMinutes(), 0, 0);
-        DateTime endPeriod = DateTime.now().withTime(Constants.systemOffEndPeriodHours.getHours(), Constants.systemOffEndPeriodMinutes.getMinutes(), 0, 0);
+        DateTime startPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_START_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_START_PERIOD_MINUTES.getMinutes(), 0, 0);
+        DateTime endPeriod = DateTime.now().withTime(Constants.SYSTEM_OFF_END_PERIOD_HOURS.getHours(), Constants.SYSTEM_OFF_END_PERIOD_MINUTES.getMinutes(), 0, 0);
 
-        if (startPeriod.isAfter(requestDate) && endPeriod.isBefore(requestDate) && request.getIssuedAmount().equals(Constants.maxAmount)) {
+        if (startPeriod.isAfter(requestDate) && endPeriod.isBefore(requestDate) && request.getIssuedAmount().equals(Constants.MAX_AMOUNT)) {
             throw new LoanCannotBeIssuedException();
         }
-        if (request.getIssuedAmount().compareTo(Constants.minAmount) < 0) {
+        if (request.getIssuedAmount().compareTo(Constants.MIN_AMOUNT) < 0) {
             throw new AmountTooLowException();
         }
-        if (request.getIssuedAmount().compareTo(Constants.maxAmount) > 0) {
+        if (request.getIssuedAmount().compareTo(Constants.MAX_AMOUNT) > 0) {
             throw new AmountTooBigException();
         }
-        if (request.getIssuedDuration().getStandardDays() < Constants.minLoanDuration.getStandardDays()) {
+        if (request.getIssuedDuration().getStandardDays() < Constants.MIN_LOAN_DURATION.getStandardDays()) {
             throw new LoanDurationTooShortException();
         }
-        if (request.getIssuedDuration().getStandardDays() > Constants.maxLoanDuration.getStandardDays()) {
+        if (request.getIssuedDuration().getStandardDays() > Constants.MAX_LOAN_DURATION.getStandardDays()) {
             throw new LoanDurationTooLongException();
         }
 
