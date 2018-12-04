@@ -74,7 +74,6 @@ public class LoanService {
     }
 
     private Loan extendLoanResponse(Loan request, LocalDateTime requestDate) {
-
         return loanRepository.save(Loan.builder()
                 .loanTerm(request.getLoanTerm().plus(Constants.DURATION_OF_EXTENSION))
                 .lastExtendDate(requestDate)

@@ -56,7 +56,7 @@ public class LoanRestApiTest {
         });
 
         assertNotNull(response);
-        assertEquals(askedDate, response.getLoanTerm());
+        assertEquals(askedDate.getDayOfMonth(), response.getLoanTerm().getDayOfMonth());
         assertEquals(askedAmount, response.getLoanAmount());
         assertEquals(askedAmount.multiply(Constants.INTEREST_PERCENTAGE), response.getRepaymentAmount());
     }
@@ -123,24 +123,24 @@ public class LoanRestApiTest {
 
     @Test
     public void extendLoanTerm() throws Exception {
-        Loan request = new Loan();
+        ApplyLoanRequest request = new ApplyLoanRequest();
         BigDecimal askedAmount = BigDecimal.valueOf(12000);
-        Duration askedDuration = Duration.ofDays(60);
+        Duration askedDuration = Duration.ofDays(120);
 
-        request.setLoanAmount(askedAmount);
-        request.setLoanIssuedDate(LocalDateTime.now().minus(askedDuration));
-        request.setLoanTerm(LocalDateTime.now().plus(askedDuration));
+        request.setIssuedAmount(askedAmount);
+        request.setIssuedDuration(askedDuration);
 
         MvcResult result = mockMvc.perform(post(getUri("/apply_for_loan"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Util.asJsonString(request)))
                 .andExpect(status().isOk()).andReturn();
+
         ObjectMapper mapper = new ObjectMapper();
 
         Loan response = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Loan>() {
         });
 
-        result = mockMvc.perform(post(getUri("/apply_for_loan/" + response.getLoanId()))
+        result = mockMvc.perform(post(getUri("/extend_loan/" + response.getLoanId().toString()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
@@ -148,14 +148,14 @@ public class LoanRestApiTest {
         });
 
         assertNotNull(response);
-        assertEquals(LocalDateTime.now().plus(askedDuration).plus(Constants.DURATION_OF_EXTENSION), response.getLoanTerm());
-        assertEquals(LocalDateTime.now().minus(askedDuration), response.getLoanIssuedDate());
+        assertEquals(LocalDateTime.now().plus(askedDuration).plus(Constants.DURATION_OF_EXTENSION).getDayOfMonth(), response.getLoanTerm().getDayOfMonth());
         assertNotNull(response.getLastExtendDate());
+        assertEquals(response.getLastExtendDate().getDayOfMonth(), LocalDateTime.now().getDayOfMonth());
     }
 
     @Test
     public void extendLoanTermFailure() throws Exception {
-        mockMvc.perform(post(getUri("/extend_loan/"))
+        mockMvc.perform(post(getUri("/extend_loan/0"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isExpectationFailed());
     }
