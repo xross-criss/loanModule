@@ -135,7 +135,7 @@ public class LoanRestApiTest {
         request.setLoanIssuedDate(DateTime.now().minus(askedDuration));
         request.setLoanTerm(DateTime.now().plus(askedDuration));
 
-        MvcResult result = mockMvc.perform(post(getUri("/apply_for_loan"))
+        MvcResult result = mockMvc.perform(post(getUri("/extend_loan"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Util.asJsonString(request)))
                 .andExpect(status().isOk()).andReturn();
@@ -149,6 +149,23 @@ public class LoanRestApiTest {
         assertEquals(DateTime.now().minus(askedDuration), response.getLoanIssuedDate());
         assertNotNull(response.getLastExtendDate());
     }
+
+    @Test
+    public void extendLoanTermFailure() throws Exception {
+        Loan request = new Loan();
+        BigDecimal askedAmount = BigDecimal.valueOf(12000);
+        Duration askedDuration = Duration.standardDays(60);
+
+        request.setLoanAmount(askedAmount);
+        request.setLoanIssuedDate(DateTime.now().minus(askedDuration));
+        request.setLoanTerm(DateTime.now().plus(askedDuration));
+
+        mockMvc.perform(post(getUri("/extend_loan"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Util.asJsonString(request)))
+                .andExpect(status().isExpectationFailed());
+    }
+
 
     private String getUri(String uri) {
         return REST_ROOT + uri;
