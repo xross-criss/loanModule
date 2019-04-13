@@ -15,6 +15,7 @@ public class ApplyLoanRequest {
 
     private BigDecimal issuedAmount;
     private Integer issuedDurationInDays;
+    private Integer userId;
 
     @JsonIgnore
     public Duration getIssuedDuration() {

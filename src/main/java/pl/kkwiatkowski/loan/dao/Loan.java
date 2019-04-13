@@ -1,4 +1,4 @@
-package pl.kkwiatkowski.loan.dto;
+package pl.kkwiatkowski.loan.dao;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,7 +32,7 @@ public class Loan {
     @Column(name = "loan_term")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDatetimeDeserializer.class)
-    private LocalDateTime loanTerm;
+    private LocalDateTime loanTerm; // TODO -atrybut złożony
 
     @Column(name = "loan_issued_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -42,5 +42,8 @@ public class Loan {
     @Column(name = "last_extend_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDatetimeDeserializer.class)
-    private LocalDateTime lastExtendDate;
+    private LocalDateTime lastExtendDate; //TODO - atrybut opcjonalny
+
+    @Column(name = "userId")
+    private Integer userId; //TODO - ekstensja trwałość
 }

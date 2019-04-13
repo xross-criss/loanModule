@@ -14,6 +14,6 @@ public class Constants {
     public static final LocalTime SYSTEM_OFF_PERIOD_START = LocalTime.of(0, 0);
     public static final LocalTime SYSTEM_OFF_PERIOD_END = LocalTime.of(6, 0);
     public static final BigDecimal INTEREST_PERCENTAGE = BigDecimal.valueOf(10 / 100);
-    public static final Duration DURATION_OF_EXTENSION = Duration.ofDays(30);
+    public static final Integer DURATION_OF_EXTENSION = 30;
 
 }
