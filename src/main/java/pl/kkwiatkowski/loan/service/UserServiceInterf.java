@@ -6,11 +6,12 @@ import java.util.List;
 
 public interface UserServiceInterf {
 
-    public UserDetails getUserDetails(Integer userId);
+    UserDetails getUserDetails(Integer userId);
 
-    public UserDetails createUser(UserDetails request);
+    UserDetails createUser(UserDetails request);
 
     List<UserDetails> getUsersByName(String userName);
 
     List<UserDetails> addUsers(List<UserDetails> detailsList);
+
 }

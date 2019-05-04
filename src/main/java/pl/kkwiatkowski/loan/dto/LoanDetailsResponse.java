@@ -3,6 +3,7 @@ package pl.kkwiatkowski.loan.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.kkwiatkowski.loan.dao.Loan;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,14 +11,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LoanDetailsResponse {
+public class LoanDetailsResponse extends EnhancedLoan {
+
+    private transient Integer userId;
     
-    private Integer loanId;
-    private BigDecimal loanAmount;
-    private BigDecimal repaymentAmount;
-    private LocalDateTime loanTerm;
-    private LocalDateTime loanIssuedDate;
-    private LocalDateTime lastExtendDate;
     private UserDetails user;
 
 }

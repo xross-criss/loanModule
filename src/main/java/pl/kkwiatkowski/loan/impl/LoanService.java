@@ -132,4 +132,5 @@ public class LoanService {
     public Optional<Loan> getLoanFromDB(Integer loanId) {
         return loanRepository.findById(loanId);
     }
+
 }

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class UserService implements UserServiceInterf {
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -66,4 +67,5 @@ public class UserService implements UserServiceInterf {
 
         return detailsList.stream().map(this::createUser).collect(Collectors.toList());
     }
+
 }

@@ -46,4 +46,14 @@ public class Loan {
 
     @Column(name = "userId")
     private Integer userId;
+
+    public static void convert(Loan loan, Loan baseLoan) { // TODO - Metoda klasowa
+        baseLoan.setLoanId(loan.getLoanId());
+        baseLoan.setLoanAmount(loan.getLoanAmount());
+        baseLoan.setRepaymentAmount(loan.getRepaymentAmount());
+        baseLoan.setLoanTerm(loan.getLoanTerm());
+        baseLoan.setLoanIssuedDate(loan.getLoanIssuedDate());
+        baseLoan.setLastExtendDate(loan.getLastExtendDate());
+    }
+
 }
