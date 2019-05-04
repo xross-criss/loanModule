@@ -28,6 +28,8 @@ import static pl.kkwiatkowski.loan.constants.Constants.SYSTEM_OFF_PERIOD_START;
 @Service
 public class LoanService {
 
+    public static final Integer DURATION_OF_EXTENSION = 30; //TODO - atrybut klasowy
+
     private final LoanRepository loanRepository;
     private UserServiceInterf userService;
 
@@ -81,7 +83,7 @@ public class LoanService {
     }
 
     public LoanResponse extendLoan(Integer loanId) { //TODO - przeciążęnie I
-        return extendLoan(loanId, Constants.DURATION_OF_EXTENSION);
+        return extendLoan(loanId, DURATION_OF_EXTENSION);
     }
 
     public LoanResponse extendLoan(Integer loanId, Integer duration) { //TODO - przeciążęnie I

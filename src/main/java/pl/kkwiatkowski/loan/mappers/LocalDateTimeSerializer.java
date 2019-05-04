@@ -13,7 +13,7 @@ import java.time.format.FormatStyle;
 public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
-    @Override
+    @Override // TODO - przesłanianie II
     public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider provider)
             throws IOException {
         try {
