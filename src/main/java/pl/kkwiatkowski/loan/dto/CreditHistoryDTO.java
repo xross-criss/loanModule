@@ -13,5 +13,5 @@ public class CreditHistoryDTO {
     private Integer creditHistoryId;
     private Integer score;
     private String scoreScale;
-    private List<String> historyLoanCategories;
+    private List<String> historyLoanCategories; // TODO - atr. powt
 }

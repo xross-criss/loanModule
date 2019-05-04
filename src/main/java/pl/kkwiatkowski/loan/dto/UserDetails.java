@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDetails extends CreditHistoryDTO {
+public class UserDetails extends CreditHistoryDTO { //TODO - ekstensja
     private Integer userId;
     private String firstName;
     private String secondName;

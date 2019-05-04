@@ -45,5 +45,5 @@ public class Loan {
     private LocalDateTime lastExtendDate; //TODO - atrybut opcjonalny
 
     @Column(name = "userId")
-    private Integer userId; //TODO - ekstensja trwałość
+    private Integer userId;
 }

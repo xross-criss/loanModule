@@ -18,6 +18,6 @@ public class LoanDetailsResponse {
     private LocalDateTime loanTerm;
     private LocalDateTime loanIssuedDate;
     private LocalDateTime lastExtendDate;
-    private UserDetails user; //TODO - ekstensja
+    private UserDetails user;
 
 }
