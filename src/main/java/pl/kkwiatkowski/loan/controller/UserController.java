@@ -26,7 +26,7 @@ public class UserController {
 
     @RequestMapping(value = "/getUserByName/{userName}", method = RequestMethod.GET)
     public List<UserDetails> getUserByName(@PathVariable("userName") String userName) {
-        return userService.getUsersByName(userName); // TODO - atr. powt - prawie że
+        return userService.getUsersByName(userName); // TODO - atr. powt
     }
 
     @RequestMapping(value = "/addUsers", method = RequestMethod.POST)

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "User")
-public class User {
+public class User extends CreditHistory{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
